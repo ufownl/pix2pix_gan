@@ -64,11 +64,11 @@ def train(dataset, max_epochs, learning_rate, batch_size, filters, lmda, context
 
             real_in = batch.data[0].as_in_context(context)
             real_out = batch.data[1].as_in_context(context)
+            fake_out = net_g(real_in)
 
             with mx.autograd.record():
                 real_y = net_d(mx.nd.concat(real_in, real_out, dim=1))
-                fake_out = net_g(real_in)
-                fake_y = net_d(mx.nd.concat(real_in, fake_out.detach()))
+                fake_y = net_d(mx.nd.concat(real_in, fake_out, dim=1))
                 L = wgan_loss(fake_y, real_y)
                 L.backward()
             trainer_d.step(batch_size)
@@ -77,6 +77,7 @@ def train(dataset, max_epochs, learning_rate, batch_size, filters, lmda, context
                 raise ValueError()
 
             with mx.autograd.record():
+                fake_out = net_g(real_in)
                 y = net_d(mx.nd.concat(real_in, fake_out, dim=1))
                 L = wgan_loss(y) + l1_loss(fake_out, real_out) * lmda
                 L.backward()
@@ -121,9 +122,9 @@ if __name__ == "__main__":
                 dataset = args.dataset,
                 max_epochs = args.max_epochs,
                 learning_rate = args.learning_rate,
-                batch_size = 64,
+                batch_size = 32,
                 filters = 64,
-                lmda = 100,
+                lmda = 10,
                 context = context
             )
             break;
