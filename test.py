@@ -19,7 +19,7 @@ def test(dataset, batch_size, filters, context):
     net_g = UnetGenerator(3, filters)
     net_g.load_parameters("model/{}.generator.params".format(dataset), ctx=context)
 
-    print("Training...", flush=True)
+    print("Testing...", flush=True)
     for batch in validating_set:
         real_in = batch.data[0].as_in_context(context)
         real_out = batch.data[1].as_in_context(context)
