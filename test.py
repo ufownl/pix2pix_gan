@@ -9,7 +9,9 @@ def test(dataset, batch_size, filters, context):
     datasets = {
         "facades": True,
         "cityscapes": False,
-        "maps": False
+        "maps": False,
+        "edges2shoes": False,
+        "edges2handbags": False
     }
     mx.random.seed(int(time.time()))
 
